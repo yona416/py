@@ -12,7 +12,7 @@ GAMEOVER = False
 LOG = '文件:{}中的方法:{}出错'.format(__file__,__name__)
 #3 创建地图类
 class Map():
-    #3 存储两张不同颜色的图片名称
+    #3 存储两张不同颜色的图片名称  
     map_names_list = [IMAGE_PATH + 'map1.png', IMAGE_PATH + 'map2.png']
     #3 初始化地图
     def __init__(self, x, y, img_index):

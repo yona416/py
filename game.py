@@ -156,6 +156,7 @@ class PeaBullet(pygame.sprite.Sprite):
         MainGame.window.blit(self.image, self.rect)
 
 
+
 # 9 僵尸类
 class Zombie(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -203,6 +204,28 @@ class Zombie(pygame.sprite.Sprite):
     # 9 将僵尸加载到地图中
     def display_zombie(self):
         MainGame.window.blit(self.image, self.rect)
+
+class Zombie2(Zombie):
+    def __init__(self, x, y):
+        # 调用父类的初始化方法
+        super().__init__(x, y)
+        # 加载新僵尸的图像
+        self.image = pygame.image.load('imgs/zombie2.png')
+        # 修改新僵尸的属性，例如生命值、伤害值、速度等（根据需要进行调整）
+        self.hp = 800
+        self.damage = 2
+        self.speed = 2
+
+class Zombie3(Zombie):
+    def __init__(self, x, y):
+        # 调用父类的初始化方法
+        super().__init__(x, y)
+        # 加载新僵尸的图像
+        self.image = pygame.image.load('imgs/zombie3.png')
+        # 修改新僵尸的属性，例如生命值、伤害值、速度等（根据需要进行调整）
+        self.hp = 700
+        self.damage = 2
+        self.speed = 1.5
 
 
 # 1 主程序
@@ -363,7 +386,15 @@ class MainGame():
     def init_zombies(self):
         for i in range(1, 7):
             dis = random.randint(1, 5) * 200
-            zombie = Zombie(800 + dis, i * 80)
+
+            random_number = random.randint(0, 2)
+            if random_number == 0:
+                zombie = Zombie(800 + dis, i * 80)
+            elif random_number == 1:
+                zombie = Zombie2(800 + dis, i * 80)
+            else:
+                zombie = Zombie3(800 + dis, i * 80)
+
             MainGame.zombie_list.append(zombie)
 
     # 9将所有僵尸加载到地图中

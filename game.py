@@ -246,8 +246,8 @@ class MainGame():
         MainGame.shot_sound = pygame.mixer.Sound("射击.wav")
         MainGame.hit_sound = pygame.mixer.Sound("子弹打击.wav")
         MainGame.fail_sound = pygame.mixer.Sound("闯关失败.wav")
-        MainGame.begin_sound = pygame.mixer.Sound("bmg/begin_game.wav")
-        MainGame.clock_sound = pygame.mixer.Sound("bmg/begin_background.mp3")
+        MainGame.begin_sound = pygame.mixer.Sound("bgm/begin_game.wav")
+        MainGame.clock_sound = pygame.mixer.Sound("bgm/begin_background.mp3")
         pygame.mixer.music.load("map_bgm.mp3")
         # vInfo = pygame.display.Info()  # 窗口全屏显示
         # size = width, height = vInfo.current_w, vInfo.current_h

@@ -167,7 +167,7 @@ class Zombie(pygame.sprite.Sprite):
         self.rect.y = y
         self.hp = 600
         self.damage = 1
-        self.speed = 1
+        self.speed = 1.2
         self.live = True
         self.stop = False
 
@@ -214,7 +214,7 @@ class Zombie2(Zombie):
         # 修改新僵尸的属性，例如生命值、伤害值、速度等（根据需要进行调整）
         self.hp = 800
         self.damage = 2
-        self.speed = 2
+        self.speed = 1.8
 
 class Zombie3(Zombie):
     def __init__(self, x, y):
@@ -225,7 +225,7 @@ class Zombie3(Zombie):
         # 修改新僵尸的属性，例如生命值、伤害值、速度等（根据需要进行调整）
         self.hp = 700
         self.damage = 2
-        self.speed = 1.5
+        self.speed = 1.4
 
 
 # 1 主程序

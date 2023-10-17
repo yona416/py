@@ -12,6 +12,8 @@ scrrr_height = 560
 GAMEOVER = False
 # 4 图片加载报错处理
 LOG = '文件:{}中的方法:{}出错'.format(__file__, __name__)
+# 初始化混音器模块
+# pygame.mixer.init()
 
 
 # 3 创建地图类
@@ -210,6 +212,8 @@ class MainGame():
     hit_sound = None
     set_sound = None
     fail_sound = None
+    # begin_sound = None
+    # clock_sound = None
     window = None
     guanka = 1
     score = 0
@@ -242,6 +246,8 @@ class MainGame():
         MainGame.shot_sound = pygame.mixer.Sound("射击.wav")
         MainGame.hit_sound = pygame.mixer.Sound("子弹打击.wav")
         MainGame.fail_sound = pygame.mixer.Sound("闯关失败.wav")
+        # MainGame.begin_sound = pygame.mixer.Sound("bmg/begin_game.wav")
+        # MainGame.clock_sound = pygame.mixer.Sound("bmg/begin_background.mp3")
         pygame.mixer.music.load("map_bgm.mp3")
         # vInfo = pygame.display.Info()  # 窗口全屏显示
         # size = width, height = vInfo.current_w, vInfo.current_h
@@ -370,6 +376,34 @@ class MainGame():
                 zombie.hit_plant()
             else:
                 MainGame.zombie_list.remove(zombie)
+
+    # 10 初始化游戏开始背景
+    def init_background(self):
+        # 加载游戏背景图像
+        background = pygame.image.load('imgs/begin_game1.png')
+        # 将图片作为窗口背景
+        MainGame.window.blit(background, (0, 0))
+        # 添加背景音频
+        # pygame.mixer.Sound.play(MainGame.clock_sound)
+        # 循环检测鼠标是否按下
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:  # 如果关闭窗口事件发生，结束游戏主循环
+                    running = False
+                    self.gameOver()
+                elif event.type == pygame.MOUSEBUTTONDOWN:  # 如果鼠标在窗口内任意位置按下，则进入游戏
+                    x = event.pos[0]
+                    y = event.pos[1]
+                    # 检查鼠标位置是否于开始游戏上
+                    if x in range(460, 720) and y in range(210, 340):
+                        if event.button == 1:
+                            # MainGame.clock_sound.stop()
+                            # 播放游戏开始音频
+                            # pygame.mixer.Sound.play(MainGame.begin_sound)
+                            print('Start game!')  # 游戏开始
+                            running = False
+            pygame.display.flip()  # 更新窗口显示程序运行主循环，等待游戏开始点击事件的发生，直到用户关闭窗口为止。运行结束后退出程序。
 
     # 1 开始游戏
     def start_game(self):

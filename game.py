@@ -298,7 +298,7 @@ class MainGame():
         MainGame.fail_sound = pygame.mixer.Sound("bgm/闯关失败.wav")
         MainGame.begin_sound = pygame.mixer.Sound("bgm/begin_game.wav")
         MainGame.clock_sound = pygame.mixer.Sound("bgm/begin_background.mp3")
-        pygame.mixer.music.load("bgm/map_bgm.mp3")
+        pygame.mixer.music.load("bgm/map_bgm.ogg")
         # vInfo = pygame.display.Info()  # 窗口全屏显示
         # size = width, height = vInfo.current_w, vInfo.current_h
         # MainGame.window = pygame.display.set_mode(size, pygame.FULLSCREEN)  # 窗口全屏显示

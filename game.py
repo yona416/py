@@ -230,31 +230,34 @@ class Zombie3(Zombie):
 
 # 1 主程序
 class MainGame():
-    # 2 创建关数，得分，剩余分数，钱数
-    shot_sound = None
-    hit_sound = None
-    set_sound = None
-    fail_sound = None
-    begin_sound = None
-    clock_sound = None
-    window = None
-    guanka = 1
-    score = 0
-    remnant_score = 100
-    money = 50
-    # 3 存储所有地图坐标点
-    map_points_list = []
-    # 3 存储所有的地图块
-    map_list = []
-    # 4 存储所有植物的列表
-    plants_list = []
-    # 7 存储所有豌豆子弹的列表
-    peabullet_list = []
-    # 9 新增存储所有僵尸的列表
-    zombie_list = []
-    count_zombie = 0
-    time_count = 0
-    produce_zombie = 100
+    # 0 游戏数据初始化
+    def init_parameter(self):
+
+        # 2 创建关数，得分，剩余分数，钱数
+        MainGame.shot_sound = None
+        MainGame.hit_sound = None
+        MainGame.set_sound = None
+        MainGame.fail_sound = None
+        MainGame.begin_sound = None
+        MainGame.clock_sound = None
+        MainGame.window = None
+        MainGame.guanka = 1
+        MainGame.score = 0
+        MainGame.remnant_score = 100
+        MainGame.money = 50
+        # 3 存储所有地图坐标点
+        MainGame.map_points_list = []
+        # 3 存储所有的地图块
+        MainGame.map_list = []
+        # 4 存储所有植物的列表
+        MainGame.plants_list = []
+        # 7 存储所有豌豆子弹的列表
+        MainGame.peabullet_list = []
+        # 9 新增存储所有僵尸的列表
+        MainGame.zombie_list = []
+        MainGame.count_zombie = 0
+        MainGame.time_count = 0
+        MainGame.produce_zombie = 100
 
     # 1 加载游戏窗口
     def init_window(self):
@@ -422,8 +425,8 @@ class MainGame():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:  # 如果关闭窗口事件发生，结束游戏主循环
                     running = False
-                    self.gameOver()
-                elif event.type == pygame.MOUSEBUTTONDOWN:  # 如果鼠标在窗口内任意位置按下，则进入游戏
+                    self.quitGame()
+                elif event.type == pygame.MOUSEBUTTONDOWN:  # 如果鼠标左键在窗口内开始游戏位置按下，则进入游戏
                     x = event.pos[0]
                     y = event.pos[1]
                     # 检查鼠标位置是否于开始游戏上
@@ -434,10 +437,65 @@ class MainGame():
                             pygame.mixer.Sound.play(MainGame.begin_sound)
                             print('Start game!')  # 游戏开始
                             running = False
-            pygame.display.flip()  # 更新窗口显示程序运行主循环，等待游戏开始点击事件的发生，直到用户关闭窗口为止。运行结束后退出程序。
+            pygame.display.flip()  # 更新窗口等待游戏开始点击事件的发生，直到用户关闭窗口为止。运行结束后退出程序。
+
+        # 11 初始化游戏退出界面
+
+    def init_gameResult(self):
+        # 停止游戏背景音
+        pygame.mixer.music.stop()
+        # 播放游戏结算界面音频
+        pygame.mixer.Sound.play(MainGame.fail_sound)
+        # 游戏结算界面背景
+        MainGame.window.fill((255, 255, 255))
+        MainGame.window.blit(self.draw_text('你能做的，岂止如此', 70, (255, 0, 0)), (100, 100))
+        # 显示玩家得分
+        gameResult = '你通过的关数是{}，得分是{}'.format(MainGame.guanka, MainGame.score)
+        MainGame.window.blit(self.draw_text(gameResult, 26, (255, 0, 0)),
+                             (220, 200))
+        pygame.display.update()
+        # 创建按钮对象
+        button = [0, 0]
+        button[0] = pygame.Rect(350, 300, 100, 50)  # 再来一局按钮初始位置和大小
+        button[1] = pygame.Rect(350, 400, 100, 50)  # 退出游戏按钮初始位置和大小
+        # 创建按钮文本对象
+        button_text = ['再来一局', '退出游戏']
+        button_text_surface = [0, 0]
+        global GAMEOVER
+        GAMEOVER = False
+        # 游戏主循环
+        running = True
+        while running:
+            # 处理事件
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                    self.quitGame()
+                elif event.type == pygame.MOUSEBUTTONDOWN:  # 监听鼠标点击事件
+                    if button[1].collidepoint(pygame.mouse.get_pos()):  # 检查鼠标位置是否与按钮退出游戏相交
+                        if event.button == 1:
+                            running = False
+                            self.quitGame()
+                    if button[0].collidepoint(pygame.mouse.get_pos()):  # 检查鼠标位置是否与按钮再来一局相交
+                        if event.button == 1:
+                            print('再来一局')  # 再来一局按钮被点击
+                            running = False
+
+            for i in range(2):
+                pygame.draw.rect(MainGame.window, (255, 255, 255), button[i])  # 在屏幕上绘制按钮
+                button_text_surface[i] = self.draw_text(button_text[i], 26, (255, 0, 0))  # 绘制按钮文本
+                MainGame.window.blit(button_text_surface[i], (
+                    button[i].x + button[i].width / 2 - button_text_surface[i].get_width() / 2,
+                    button[i].y + button[i].height / 2 - button_text_surface[i].get_height() / 2))  # 将文本居中显示在按钮上
+            pygame.display.flip()  # 更新屏幕显示
+
+        pygame.mixer.Sound.stop(MainGame.fail_sound)
+        MainGame.start_game(self)
 
     # 1 开始游戏
     def start_game(self):
+        # 0 游戏数据初始化
+        self.init_parameter()
         # 1 初始化窗口
         self.init_window()
         # 10 初始化游戏开始背景
@@ -487,17 +545,18 @@ class MainGame():
             pygame.display.update()
 
         if GAMEOVER:
-            MainGame.window.fill((255, 255, 255))
-            MainGame.window.blit(self.draw_text('你能做的，岂止如此', 70, (255, 0, 0)), (100, 200))
-            pygame.mixer.music.stop()
-            pygame.display.update()
-            pygame.mixer.Sound.play(MainGame.fail_sound)
-            pygame.time.wait(4000)
+            # 访问游戏结算界面
+            MainGame.init_gameResult(self)
 
-    # 10 程序结束方法
+    # 10 程序结束方法程序结束进入结算界面
     def gameOver(self):
         global GAMEOVER
         GAMEOVER = True
+
+    # 11 程序结束方法
+    def quitGame(self):
+        pygame.quit()
+        sys.exit()
 
 
 # 1 启动主程序

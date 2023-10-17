@@ -1,8 +1,7 @@
-#fsy修改：加了音频和一个僵尸角色后的代码，且图片音频文件没有更新
 # 1 引入需要的模块
 import random
 
-import pygame,sys
+import pygame, sys
 
 # 1 配置图片地址
 IMAGE_PATH = 'imgs/'
@@ -148,7 +147,7 @@ class PeaBullet(pygame.sprite.Sprite):
         for i in range(1, 100):
             if MainGame.score == 100 * i and MainGame.remnant_score == 0:
                 MainGame.remnant_score = 100 * i
-                MainGame.shaoguan += 1
+                MainGame.guanka += 1
                 MainGame.produce_zombie += 50
 
     def display_peabullet(self):
@@ -203,53 +202,6 @@ class Zombie(pygame.sprite.Sprite):
     def display_zombie(self):
         MainGame.window.blit(self.image, self.rect)
 
-#10 new僵尸类
-class NewZombie(pygame.sprite.Sprite):
-    def __init__(self,x,y):
-        super(NewZombie, self).__init__()
-        self.image = pygame.image.load('imgs\FlagZombie_0(1).png')
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        self.hp = 1000
-        self.damage = 2
-        self.speed = 0.8
-        self.live = True
-        self.stop = False
-    #9 僵尸的移动
-    def move_zombie(self):
-        if self.live and not self.stop:
-            self.rect.x -= self.speed
-            if self.rect.x < -80:
-                #8 调用游戏结束方法
-                MainGame().gameOver()
-
-    #9 判断僵尸是否碰撞到植物，如果碰撞，调用攻击植物的方法
-    def hit_plant(self):
-        for plant in MainGame.plants_list:
-            if pygame.sprite.collide_rect(self,plant):
-                #8  僵尸移动状态的修改
-                self.stop = True
-                self.eat_plant(plant)
-    #9 僵尸攻击植物
-    def eat_plant(self,plant):
-        #9 植物生命值减少
-        plant.hp -= self.damage
-        #9 植物死亡后的状态修改，以及地图状态的修改
-        if plant.hp <= 0:
-            a = plant.rect.y // 80 - 1
-            b = plant.rect.x // 80
-            map = MainGame.map_list[a][b]
-            map.can_grow = True
-            plant.live = False
-            #8 修改僵尸的移动状态
-            self.stop = False
-
-
-
-    #9 将僵尸加载到地图中
-    def display_zombie(self):
-        MainGame.window.blit(self.image,self.rect)
 
 # 1 主程序
 class MainGame():
@@ -259,7 +211,7 @@ class MainGame():
     set_sound = None
     fail_sound = None
     window = None
-    shaoguan = 1
+    guanka = 1
     score = 0
     remnant_score = 100
     money = 50
@@ -283,7 +235,7 @@ class MainGame():
         pygame.init()
         # 1 创建窗口
         MainGame.window = pygame.display.set_mode([scrrr_width, scrrr_height])
-    #增加bgm和音效
+        # 增加bgm和音效
         #
         # MainGame.set_sound = pygame.mixer.Sound("set2.wav")
         MainGame.set_sound = pygame.mixer.Sound("植物落地.wav")
@@ -294,6 +246,7 @@ class MainGame():
         # vInfo = pygame.display.Info()  # 窗口全屏显示
         # size = width, height = vInfo.current_w, vInfo.current_h
         # MainGame.window = pygame.display.set_mode(size, pygame.FULLSCREEN)  # 窗口全屏显示
+
     # 2 文本绘制
     def draw_text(self, content, size, color):
         pygame.font.init()
@@ -404,11 +357,8 @@ class MainGame():
     def init_zombies(self):
         for i in range(1, 7):
             dis = random.randint(1, 5) * 200
-            dis2 = random.randint(1, 5) * 200
             zombie = Zombie(800 + dis, i * 80)
             MainGame.zombie_list.append(zombie)
-            zombie2 = NewZombie(800 + dis2, i * 80)
-            MainGame.zombie_list.append(zombie2)
 
     # 9将所有僵尸加载到地图中
     def load_zombies(self):
@@ -420,7 +370,6 @@ class MainGame():
                 zombie.hit_plant()
             else:
                 MainGame.zombie_list.remove(zombie)
-
 
     # 1 开始游戏
     def start_game(self):
@@ -441,7 +390,8 @@ class MainGame():
             # 2 渲染的文字和坐标位置
             MainGame.window.blit(self.draw_text('当前钱数$: {}'.format(MainGame.money), 26, (255, 0, 0)), (500, 40))
             MainGame.window.blit(self.draw_text(
-                '当前关数{}，得分{},距离下关还差{}分'.format(MainGame.shaoguan, MainGame.score, MainGame.remnant_score), 26,
+                '当前关数{}，得分{},距离下关还差{}分'.format(MainGame.guanka, MainGame.score, MainGame.remnant_score),
+                26,
                 (255, 0, 0)), (5, 40))
             self.load_help_text()
             # 3 需要反复加载地图
@@ -459,7 +409,7 @@ class MainGame():
             if MainGame.count_zombie == MainGame.produce_zombie:
                 self.init_zombies()
                 MainGame.count_zombie = 0
-            #新增 计数器增长，默认产生阳光
+            # 新增 计数器增长，默认产生阳光
             MainGame.time_count += 1
             if MainGame.time_count == 80:
                 MainGame.money += 25
@@ -476,7 +426,7 @@ class MainGame():
             pygame.display.update()
             pygame.mixer.Sound.play(MainGame.fail_sound)
             pygame.time.wait(4000)
-         
+
     # 10 程序结束方法
     def gameOver(self):
         global GAMEOVER

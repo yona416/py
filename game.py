@@ -458,7 +458,7 @@ class MainGame():
     # 10 初始化游戏开始背景
     def init_background(self):
         # 设置按钮
-        button = pygame.Rect(465, 225, 250, 110)  # 开始游戏按钮初始位置和大小
+        button = pygame.Rect(462, 224, 256, 112)  # 开始游戏按钮初始位置和大小
         pygame.draw.rect(MainGame.window, (0, 0, 0), button)  # 在屏幕上绘制按钮
         # 先绘制按钮，再设置窗口背景(覆盖按钮)
         # 加载游戏背景图像
@@ -491,21 +491,21 @@ class MainGame():
         pygame.mixer.music.stop()
         # 播放游戏结算界面音频
         pygame.mixer.Sound.play(MainGame.fail_sound)
-
+        # 创建按钮对象
+        button = [0, 0]
+        button[0] = pygame.Rect(571, 115, 129, 78)  # 再来一局按钮初始位置和大小
+        button[1] = pygame.Rect(619, 203, 129, 78)  # 退出游戏按钮初始位置和大小
+        for i in range(2):
+            pygame.draw.rect(MainGame.window, (255, 0, 0), button[i])  # 在屏幕上绘制按钮
         # 游戏结算界面背景
         MainGame.window.blit(pygame.image.load('imgs/gameResult.png'), (0, 0))
         # 显示玩家得分
-        gameResult = '你通过的关数是{}，得分是{}'.format(MainGame.guanka, MainGame.score)
-        MainGame.window.blit(self.draw_text(gameResult, 26, (255, 0, 0)),
-                             (130, 270))
+        MainGame.window.blit(self.draw_text('通过关数:{}'.format(MainGame.guanka), 26, (255, 0, 0)),
+                             (635, 310))
+        MainGame.window.blit(self.draw_text('得分:{}'.format(MainGame.score), 26, (255, 0, 0)),
+                             (635, 340))
         pygame.display.update()
-        # 创建按钮对象
-        button = [0, 0]
-        button[0] = pygame.Rect(220, 370, 100, 50)  # 再来一局按钮初始位置和大小
-        button[1] = pygame.Rect(220, 450, 100, 50)  # 退出游戏按钮初始位置和大小
-        # 创建按钮文本对象
-        button_text = ['再来一局', '退出游戏']
-        button_text_surface = [0, 0]
+
         global GAMEOVER
         GAMEOVER = False
         # 结算界面检测鼠标是否按下
@@ -526,13 +526,6 @@ class MainGame():
                             print('再来一局')  # 再来一局按钮被点击
                             running = False
 
-            for i in range(2):
-                pygame.draw.rect(MainGame.window, (255, 255, 255), button[i])  # 在屏幕上绘制按钮
-                button_text_surface[i] = self.draw_text(button_text[i], 26, (255, 0, 0))  # 绘制按钮文本
-                MainGame.window.blit(button_text_surface[i], (
-                    button[i].x + button[i].width / 2 - button_text_surface[i].get_width() / 2,
-                    button[i].y + button[i].height / 2 - button_text_surface[i].get_height() / 2))  # 将文本居中显示在按钮上
-            pygame.display.flip()  # 更新屏幕显示
 
         pygame.mixer.Sound.stop(MainGame.fail_sound)
         MainGame.start_game(self)

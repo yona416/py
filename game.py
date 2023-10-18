@@ -46,9 +46,9 @@ class Plant(pygame.sprite.Sprite):
 
 
 # 5 向日葵类
-class Sunflower(Plant):
+class food1(Plant):
     def __init__(self, x, y):
-        super(Sunflower, self).__init__()
+        super(food1, self).__init__()
         self.image = pygame.image.load('imgs/sunflower.png')
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -70,9 +70,9 @@ class Sunflower(Plant):
         MainGame.window.blit(self.image, self.rect)
 
 
-class Sunflower2(Sunflower):
+class food2(food1):
     def __init__(self, x, y):
-        super(Sunflower2, self).__init__(x, y)
+        super(food2, self).__init__(x, y)
         # 修改价格和生成阳光的速度
         self.price = 45  # 修改为新太阳花的价格
         self.sun_production_speed = 70  # 修改为新太阳花生成阳光的速度（帧数）
@@ -90,9 +90,9 @@ class Sunflower2(Sunflower):
 
 
 # 6 豌豆射手类
-class PeaShooter(Plant):
+class attacker1(Plant):
     def __init__(self, x, y):
-        super(PeaShooter, self).__init__()
+        super(attacker1, self).__init__()
         # self.image 为一个 surface
         self.image = pygame.image.load('imgs/peashooter.png')
         self.rect = self.image.get_rect()
@@ -117,7 +117,7 @@ class PeaShooter(Plant):
             if self.shot_count == 25:
                 pygame.mixer.Sound.play(MainGame.shot_sound)
                 # 6 基于当前豌豆射手的位置，创建子弹
-                peabullet = PeaBullet(self)
+                peabullet = bullet1(self)
                 # 6 将子弹存储到子弹列表中
                 MainGame.peabullet_list.append(peabullet)
                 self.shot_count = 0
@@ -127,9 +127,9 @@ class PeaShooter(Plant):
 
         MainGame.window.blit(self.image, self.rect)
 
-class PeaShooter2(PeaShooter):
+class attacker2(attacker1):
     def __init__(self, x, y):
-        super(PeaShooter2, self).__init__(x, y)
+        super(attacker2, self).__init__(x, y)
         self.image = pygame.image.load('imgs/peashooter2.png')
 
 
@@ -146,14 +146,14 @@ class PeaShooter2(PeaShooter):
             if self.shot_count == 25:
                 pygame.mixer.Sound.play(MainGame.shot_sound)
                 # 6 基于当前豌豆射手的位置，创建子弹
-                peabullet = PeaBullet2(self)
+                peabullet = bullet2(self)
                 # 6 将子弹存储到子弹列表中
                 MainGame.peabullet_list.append(peabullet)
                 self.shot_count = 0
 
 
 # 7 豌豆子弹类
-class PeaBullet(pygame.sprite.Sprite):
+class bullet1(pygame.sprite.Sprite):
     def __init__(self, peashooter):
         self.live = True
         self.image = pygame.image.load('imgs/peabullet.png')
@@ -197,23 +197,23 @@ class PeaBullet(pygame.sprite.Sprite):
         MainGame.window.blit(self.image, self.rect)
 
 
-class PeaBullet2(PeaBullet):
+class bullet2(bullet1):
     def __init__(self, peashooter):
         super().__init__(peashooter)  # 调用父类的构造函数，继承父类的属性和方法
         self.image = pygame.image.load('imgs/peabullet2.png')  # 加载新子弹的图像
         self.damage = 70
 
 # 9 僵尸类
-class Zombie(pygame.sprite.Sprite):
+class tiredxiaoke(pygame.sprite.Sprite):
     def __init__(self, x, y):
-        super(Zombie, self).__init__()
+        super(tiredxiaoke, self).__init__()
         self.image = pygame.image.load('imgs/zombie.png')
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.hp = 600
-        self.damage = 1
-        self.speed = 1.2
+        self.hp = 800
+        self.damage = 2
+        self.speed = 0.8
         self.live = True
         self.stop = False
 
@@ -251,7 +251,7 @@ class Zombie(pygame.sprite.Sprite):
     def display_zombie(self):
         MainGame.window.blit(self.image, self.rect)
 
-class Zombie2(Zombie):
+class workingxiaoke(tiredxiaoke):
     def __init__(self, x, y):
         # 调用父类的初始化方法
         super().__init__(x, y)
@@ -260,18 +260,18 @@ class Zombie2(Zombie):
         # 修改新僵尸的属性，例如生命值、伤害值、速度等（根据需要进行调整）
         self.hp = 700
         self.damage = 1.5
-        self.speed = 1
+        self.speed = 1.3
 
-class Zombie3(Zombie):
+class coolxiaoke(tiredxiaoke):
     def __init__(self, x, y):
         # 调用父类的初始化方法
         super().__init__(x, y)
         # 加载新僵尸的图像
         self.image = pygame.image.load('imgs/zombie3.png')
         # 修改新僵尸的属性，例如生命值、伤害值、速度等（根据需要进行调整）
-        self.hp = 800
-        self.damage = 2
-        self.speed = 0.7
+        self.hp = 700
+        self.damage = 1
+        self.speed = 1.51
 
 
 # 1 主程序
@@ -374,10 +374,10 @@ class MainGame():
         for plant in MainGame.plants_list:
             # 6 优化加载植物的处理逻辑
             if plant.live:
-                if isinstance(plant, Sunflower):
+                if isinstance(plant, food1):
                     plant.display_sunflower()
                     plant.produce_money()
-                elif isinstance(plant, PeaShooter):
+                elif isinstance(plant, attacker1):
                     plant.display_peashooter()
                     plant.shot()
             else:
@@ -405,13 +405,13 @@ class MainGame():
                 sys.exit()
             elif e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_1:  # 键盘1键，选择种植Sunflower
-                    plant_type = Sunflower
+                    plant_type = food1
                 elif e.key == pygame.K_2:  # 键盘2键，选择种植Sunflower2
-                    plant_type = Sunflower2
+                    plant_type = food2
                 elif e.key == pygame.K_3:  # 键盘3键，选择种植PeaShooter
-                    plant_type = PeaShooter
+                    plant_type = attacker1
                 elif e.key == pygame.K_4:  # 键盘4键，选择种植PeaShooter2
-                    plant_type = PeaShooter2
+                    plant_type = attacker2
                 else:
                     plant_type = None
 
@@ -434,13 +434,13 @@ class MainGame():
         for i in range(1, 7):
             dis = random.randint(1, 5) * 200
 
-            random_number = random.randint(0, 2)
-            if random_number == 0:
-                zombie = Zombie(800 + dis, i * 80)
-            elif random_number == 1:
-                zombie = Zombie2(800 + dis, i * 80)
+            random_number = random.randint(0, 8)
+            if 0 <= random_number <= 3:
+                zombie = tiredxiaoke(800 + dis, i * 80)
+            elif 4 <= random_number <= 6:
+                zombie = workingxiaoke(800 + dis, i * 80)
             else:
-                zombie = Zombie3(800 + dis, i * 80)
+                zombie = coolxiaoke(800 + dis, i * 80)
 
             MainGame.zombie_list.append(zombie)
 

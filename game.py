@@ -334,7 +334,7 @@ class MainGame():
 
     # 2 加载帮助提示
     def load_help_text(self):
-        text1 = self.draw_text('1.按左键创建向日葵 2.按右键创建豌豆射手', 26, (255, 0, 0))
+        text1 = self.draw_text('光标选中，键盘1-4创建', 26, (255, 0, 0))
         MainGame.window.blit(text1, (5, 5))
 
     # 3 初始化坐标点

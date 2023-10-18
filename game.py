@@ -1,13 +1,11 @@
 # 1 引入需要的模块
-import random
-
-import pygame, sys
+import random, pygame, sys
 
 # 1 配置图片地址
 IMAGE_PATH = 'imgs/'
 # 1 设置页面宽高
-scrrr_width = 800
-scrrr_height = 560
+screen_width = 800
+screen_height = 560
 # 1 创建控制游戏结束的状态
 GAMEOVER = False
 # 4 图片加载报错处理
@@ -148,7 +146,7 @@ class PeaBullet(pygame.sprite.Sprite):
 
     def move_bullet(self):
         # 7 在屏幕范围内，实现往右移动
-        if self.rect.x < scrrr_width:
+        if self.rect.x < screen_width:
             self.rect.x += self.speed
         else:
             self.live = False
@@ -191,7 +189,7 @@ class Zombie(pygame.sprite.Sprite):
         self.rect.y = y
         self.hp = 600
         self.damage = 1
-        self.speed = 1.2
+        self.speed = 1.53
         self.live = True
         self.stop = False
 
@@ -238,7 +236,7 @@ class Zombie2(Zombie):
         # 修改新僵尸的属性，例如生命值、伤害值、速度等（根据需要进行调整）
         self.hp = 800
         self.damage = 2
-        self.speed = 1.8
+        self.speed = 0.5
 
 class Zombie3(Zombie):
     def __init__(self, x, y):
@@ -249,7 +247,7 @@ class Zombie3(Zombie):
         # 修改新僵尸的属性，例如生命值、伤害值、速度等（根据需要进行调整）
         self.hp = 700
         self.damage = 2
-        self.speed = 1.4
+        self.speed = 0.4
 
 
 # 1 主程序
@@ -288,7 +286,7 @@ class MainGame():
         # 1 调用显示模块的初始化
         pygame.init()
         # 1 创建窗口
-        MainGame.window = pygame.display.set_mode([scrrr_width, scrrr_height])
+        MainGame.window = pygame.display.set_mode([screen_width, screen_height])
         # 增加bgm和音效
         #
         # MainGame.set_sound = pygame.mixer.Sound("bgm/set2.wav")
@@ -381,60 +379,31 @@ class MainGame():
         for e in eventList:
             if e.type == pygame.QUIT:
                 sys.exit()
-            elif e.type == pygame.MOUSEBUTTONDOWN:
-                if e.button == 1:  # 鼠标左键点击
-                    # 获取鼠标点击位置
-                    x = e.pos[0] // 80
-                    y = e.pos[1] // 80
-                    map = MainGame.map_list[y - 1][x]
-                    if map.can_grow and MainGame.money >= 50:
-                        pygame.mixer.Sound.play(MainGame.set_sound)
-                        # 记录种植位置
-                        waiting_for_plant_type = True
-                        while waiting_for_plant_type:
-                            for event in pygame.event.get():
-                                if event.type == pygame.KEYDOWN:
-                                    if event.key == pygame.K_1:  # 键盘1键，种植第一种植物（太阳花或豌豆射手）
-                                        sunflower = Sunflower(map.position[0], map.position[1])
-                                        MainGame.plants_list.append(sunflower)
-                                        print('当前植物列表长度:{}'.format(len(MainGame.plants_list)))
-                                        map.can_grow = False
-                                        MainGame.money -= 50
-                                        waiting_for_plant_type = False
-                                    elif event.key == pygame.K_2:  # 键盘2键，种植第二种植物
-                                        sunflower = Sunflower2(map.position[0], map.position[1])
-                                        MainGame.plants_list.append(sunflower)
-                                        print('当前植物列表长度:{}'.format(len(MainGame.plants_list)))
-                                        map.can_grow = False
-                                        MainGame.money -= 50
-                                        waiting_for_plant_type = False
+            elif e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_1:  # 键盘1键，选择种植Sunflower
+                    plant_type = Sunflower
+                elif e.key == pygame.K_2:  # 键盘2键，选择种植Sunflower2
+                    plant_type = Sunflower2
+                elif e.key == pygame.K_3:  # 键盘3键，选择种植PeaShooter
+                    plant_type = PeaShooter
+                elif e.key == pygame.K_4:  # 键盘4键，选择种植PeaShooter2
+                    plant_type = PeaShooter2
+                else:
+                    plant_type = None
 
-                elif e.button == 3:  # 鼠标右键点击
-                    # 获取鼠标点击位置
-                    x = e.pos[0] // 80
-                    y = e.pos[1] // 80
-                    map = MainGame.map_list[y - 1][x]
-                    if map.can_grow and MainGame.money >= 50:
-                        pygame.mixer.Sound.play(MainGame.set_sound)
-                        # 记录种植位置
-                        waiting_for_plant_type = True
-                        while waiting_for_plant_type:
-                            for event in pygame.event.get():
-                                if event.type == pygame.KEYDOWN:
-                                    if event.key == pygame.K_1:  # 键盘1键，种植第一种植物
-                                        peashooter = PeaShooter(map.position[0], map.position[1])
-                                        MainGame.plants_list.append(peashooter)
-                                        print('当前植物列表长度:{}'.format(len(MainGame.plants_list)))
-                                        map.can_grow = False
-                                        MainGame.money -= 50
-                                        waiting_for_plant_type = False
-                                    elif event.key == pygame.K_2:  # 键盘2键，种植第二种植物
-                                        peashooter = PeaShooter2(map.position[0], map.position[1])
-                                        MainGame.plants_list.append(peashooter)
-                                        print('当前植物列表长度:{}'.format(len(MainGame.plants_list)))
-                                        map.can_grow = False
-                                        MainGame.money -= 50
-                                        waiting_for_plant_type = False
+                if plant_type and MainGame.money >= 50:
+                    pygame.mixer.Sound.play(MainGame.set_sound)
+                    # 获取鼠标当前位置
+                    mouse_x, mouse_y = pygame.mouse.get_pos()
+                    x = mouse_x // 80
+                    y = mouse_y // 80
+                    if 0 <= x <= len(MainGame.map_list[0]) and 0 < y <= len(MainGame.map_list):
+                        map = MainGame.map_list[y - 1][x]
+                        if map.can_grow:
+                            plant = plant_type(map.position[0], map.position[1])
+                            MainGame.plants_list.append(plant)
+                            map.can_grow = False
+                            MainGame.money -= 50
 
     # 9 新增初始化僵尸的方法
     def init_zombies(self):

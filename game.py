@@ -457,6 +457,10 @@ class MainGame():
 
     # 10 初始化游戏开始背景
     def init_background(self):
+        # 设置按钮
+        button = pygame.Rect(465, 225, 250, 110)  # 开始游戏按钮初始位置和大小
+        pygame.draw.rect(MainGame.window, (0, 0, 0), button)  # 在屏幕上绘制按钮
+        # 先绘制按钮，再设置窗口背景(覆盖按钮)
         # 加载游戏背景图像
         background = pygame.image.load('imgs/begin_game1.png')
         # 将图片作为窗口背景
@@ -471,43 +475,40 @@ class MainGame():
                     running = False
                     self.quitGame()
                 elif event.type == pygame.MOUSEBUTTONDOWN:  # 如果鼠标左键在窗口内开始游戏位置按下，则进入游戏
-                    x = event.pos[0]
-                    y = event.pos[1]
-                    # 检查鼠标位置是否于开始游戏上
-                    if x in range(460, 720) and y in range(210, 340):
+                    if button.collidepoint(pygame.mouse.get_pos()):  # 检查鼠标位置是否与按钮开始游戏相交
                         if event.button == 1:
                             MainGame.clock_sound.stop()
                             # 播放游戏开始音频
                             pygame.mixer.Sound.play(MainGame.begin_sound)
                             print('Start game!')  # 游戏开始
                             running = False
+
             pygame.display.flip()  # 更新窗口等待游戏开始点击事件的发生，直到用户关闭窗口为止。运行结束后退出程序。
 
-        # 11 初始化游戏退出界面
-
+    # 11 初始化游戏退出界面
     def init_gameResult(self):
         # 停止游戏背景音
         pygame.mixer.music.stop()
         # 播放游戏结算界面音频
         pygame.mixer.Sound.play(MainGame.fail_sound)
+
         # 游戏结算界面背景
-        MainGame.window.fill((255, 255, 255))
-        MainGame.window.blit(self.draw_text('你能做的，岂止如此', 70, (255, 0, 0)), (100, 100))
+        MainGame.window.blit(pygame.image.load('imgs/gameResult.png'), (0, 0))
         # 显示玩家得分
         gameResult = '你通过的关数是{}，得分是{}'.format(MainGame.guanka, MainGame.score)
         MainGame.window.blit(self.draw_text(gameResult, 26, (255, 0, 0)),
-                             (220, 200))
+                             (130, 270))
         pygame.display.update()
         # 创建按钮对象
         button = [0, 0]
-        button[0] = pygame.Rect(350, 300, 100, 50)  # 再来一局按钮初始位置和大小
-        button[1] = pygame.Rect(350, 400, 100, 50)  # 退出游戏按钮初始位置和大小
+        button[0] = pygame.Rect(220, 370, 100, 50)  # 再来一局按钮初始位置和大小
+        button[1] = pygame.Rect(220, 450, 100, 50)  # 退出游戏按钮初始位置和大小
         # 创建按钮文本对象
         button_text = ['再来一局', '退出游戏']
         button_text_surface = [0, 0]
         global GAMEOVER
         GAMEOVER = False
-        # 游戏主循环
+        # 结算界面检测鼠标是否按下
         running = True
         while running:
             # 处理事件

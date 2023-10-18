@@ -74,8 +74,8 @@ class Sunflower2(Sunflower):
     def __init__(self, x, y):
         super(Sunflower2, self).__init__(x, y)
         # 修改价格和生成阳光的速度
-        self.price = 100  # 修改为新太阳花的价格
-        self.sun_production_speed = 90  # 修改为新太阳花生成阳光的速度（帧数）
+        self.price = 45  # 修改为新太阳花的价格
+        self.sun_production_speed = 70  # 修改为新太阳花生成阳光的速度（帧数）
         self.image = pygame.image.load('imgs/sunflower2.png')  # 修改为新太阳花的图片路径
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -213,7 +213,7 @@ class Zombie(pygame.sprite.Sprite):
         self.rect.y = y
         self.hp = 600
         self.damage = 1
-        self.speed = 1.53
+        self.speed = 1.2
         self.live = True
         self.stop = False
 
@@ -258,9 +258,9 @@ class Zombie2(Zombie):
         # 加载新僵尸的图像
         self.image = pygame.image.load('imgs/zombie2.png')
         # 修改新僵尸的属性，例如生命值、伤害值、速度等（根据需要进行调整）
-        self.hp = 800
-        self.damage = 2
-        self.speed = 0.5
+        self.hp = 700
+        self.damage = 1.5
+        self.speed = 1
 
 class Zombie3(Zombie):
     def __init__(self, x, y):
@@ -269,9 +269,9 @@ class Zombie3(Zombie):
         # 加载新僵尸的图像
         self.image = pygame.image.load('imgs/zombie3.png')
         # 修改新僵尸的属性，例如生命值、伤害值、速度等（根据需要进行调整）
-        self.hp = 700
+        self.hp = 800
         self.damage = 2
-        self.speed = 0.4
+        self.speed = 0.7
 
 
 # 1 主程序
@@ -334,7 +334,7 @@ class MainGame():
 
     # 2 加载帮助提示
     def load_help_text(self):
-        text1 = self.draw_text('光标选中，键盘1-4创建', 26, (255, 0, 0))
+        text1 = self.draw_text('光标悬浮，按1、2补充早餐能量，按3、4发起早八攻击', 26, (255, 0, 0))
         MainGame.window.blit(text1, (5, 5))
 
     # 3 初始化坐标点

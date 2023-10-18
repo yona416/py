@@ -76,7 +76,7 @@ class Sunflower2(Sunflower):
         # 修改价格和生成阳光的速度
         self.price = 100  # 修改为新太阳花的价格
         self.sun_production_speed = 90  # 修改为新太阳花生成阳光的速度（帧数）
-        self.image = pygame.image.load('imgs/zombie2.png')  # 修改为新太阳花的图片路径
+        self.image = pygame.image.load('imgs/sunflower2.png')  # 修改为新太阳花的图片路径
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -130,7 +130,26 @@ class PeaShooter(Plant):
 class PeaShooter2(PeaShooter):
     def __init__(self, x, y):
         super(PeaShooter2, self).__init__(x, y)
-        self.image = pygame.image.load('imgs/zombie.png')
+        self.image = pygame.image.load('imgs/peashooter2.png')
+
+
+    def shot(self):
+        # 6 记录是否应该射击
+        should_fire = False
+        for zombie in MainGame.zombie_list:
+            if zombie.rect.y == self.rect.y and 800 > zombie.rect.x > self.rect.x:
+                should_fire = True
+        # 6 如果活着
+        if self.live and should_fire:
+            self.shot_count += 1
+            # 6 计数器到25发射一次
+            if self.shot_count == 25:
+                pygame.mixer.Sound.play(MainGame.shot_sound)
+                # 6 基于当前豌豆射手的位置，创建子弹
+                peabullet = PeaBullet2(self)
+                # 6 将子弹存储到子弹列表中
+                MainGame.peabullet_list.append(peabullet)
+                self.shot_count = 0
 
 
 # 7 豌豆子弹类
@@ -178,6 +197,11 @@ class PeaBullet(pygame.sprite.Sprite):
         MainGame.window.blit(self.image, self.rect)
 
 
+class PeaBullet2(PeaBullet):
+    def __init__(self, peashooter):
+        super().__init__(peashooter)  # 调用父类的构造函数，继承父类的属性和方法
+        self.image = pygame.image.load('imgs/peabullet2.png')  # 加载新子弹的图像
+        self.damage = 70
 
 # 9 僵尸类
 class Zombie(pygame.sprite.Sprite):
